@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+
+echo 'Checking conventions before committing code.'
+
+# Check Prettier
+echo "Checking code style."
+
+yarn prettier:check ||
+(
+echo 'Code style issues found, prettier formatting.';
+yarn prettier:format;
+git add .;
+echo 'Code style fixed.';
+git commit --amend --no-edit;
+echo 'Commit successfully fixed.';
+)
+
+# Check ESLint
+echo 'Checking ESLint.'
+
+yarn lint:check ||
+(
+echo 'ESLint errors detected.'
+
+false
+)
+
+npx lint-staged
+
+echo 'Checking passed! ✅ '
